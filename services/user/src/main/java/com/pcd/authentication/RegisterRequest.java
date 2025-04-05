@@ -1,7 +1,7 @@
 package com.pcd.authentication;
 
 import com.pcd.user.Address;
-import com.pcd.user.Roles;
+import com.pcd.user.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,6 +17,6 @@ public class RegisterRequest {
     private String lastname;
     private String email;
     private String password;
-    private Roles role;
+    private Role role;
     private Address address;
 }

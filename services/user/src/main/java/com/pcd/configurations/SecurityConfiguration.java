@@ -14,7 +14,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.security.web.authentication.logout.LogoutHandler;
 
 import static com.pcd.user.Permission.*;
-import static com.pcd.user.Roles.*;
+import static com.pcd.user.Role.*;
 import static org.springframework.http.HttpMethod.DELETE;
 import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.http.HttpMethod.POST;
@@ -51,34 +51,35 @@ public class SecurityConfiguration {
                                 .permitAll()
 
                                 // Admin permissions
-                                .requestMatchers("/api/v1/admin/**").hasAnyRole(Admin.name())
-                                .requestMatchers(GET, "/api/v1/admin/users").hasAnyAuthority(ADMIN_READ.name())
-                                .requestMatchers(POST, "/api/v1/admin/users").hasAnyAuthority(ADMIN_CREATE.name())
-                                .requestMatchers(PUT, "/api/v1/admin/users/{id}").hasAnyAuthority(ADMIN_UPDATE.name())
-                                .requestMatchers(DELETE, "/api/v1/admin/users/{id}").hasAnyAuthority(ADMIN_DELETE.name())
+                                .requestMatchers(GET, "/api/v1/admin/users").hasAnyAuthority( ADMIN_READ.getPermission())
+                                .requestMatchers(POST, "/api/v1/admin/users").hasAnyAuthority(ADMIN_CREATE.getPermission())
+                                .requestMatchers(PUT, "/api/v1/admin/users/{id}").hasAnyAuthority(ADMIN_UPDATE.getPermission())
+                                .requestMatchers(DELETE, "/api/v1/admin/users/{id}").hasAnyAuthority(ADMIN_DELETE.getPermission())
+                                .requestMatchers("/api/v1/admin/**").hasAnyRole(ADMIN.name())
 
                                 // Expert permissions
-                                .requestMatchers("/api/v1/expert/**").hasAnyRole(Expert.name())
-                                .requestMatchers(GET, "/api/v1/expert/report").hasAnyAuthority(EXPERT_REPORT.name())
-                                .requestMatchers(POST, "/api/v1/expert/upload").hasAnyAuthority(EXPERT_UPLOAD.name())
-                                .requestMatchers(POST, "/api/v1/expert/analyse").hasAnyAuthority(EXPERT_ANALYZE.name())
-                                .requestMatchers(POST, "/api/v1/expert/annotate").hasAnyAuthority(EXPERT_ANNOTATE.name())
+                                .requestMatchers(GET, "/api/v1/expert/report").hasAnyAuthority(EXPERT_REPORT.getPermission())
+                                .requestMatchers(POST, "/api/v1/expert/upload").hasAnyAuthority(EXPERT_UPLOAD.getPermission())
+                                .requestMatchers(POST, "/api/v1/expert/analyse").hasAnyAuthority(EXPERT_ANALYZE.getPermission())
+                                .requestMatchers(POST, "/api/v1/expert/annotate").hasAnyAuthority(EXPERT_ANNOTATE.getPermission())
+                                .requestMatchers("/api/v1/expert/**").hasAnyRole(EXPERT.name())
 
                                 // Investigator permissions
-                                .requestMatchers("/api/v1/investigator/**").hasAnyRole(Investigator.name())
-                                .requestMatchers(GET, "/api/v1/investigator").hasAnyAuthority(INVESTIGATOR_READ.name())
-                                .requestMatchers(POST, "/api/v1/investigator").hasAnyAuthority(INVESTIGATOR_SUBMIT.name())
+                                .requestMatchers(GET, "/api/v1/investigator").hasAnyAuthority(INVESTIGATOR_READ.getPermission())
+                                .requestMatchers(POST, "/api/v1/investigator").hasAnyAuthority(INVESTIGATOR_SUBMIT.getPermission())
+                                .requestMatchers("/api/v1/investigator/**").hasAnyRole(INVESTIGATOR.name())
 
                                 // Lawyer permissions
-                                .requestMatchers("/api/v1/lawyer/**").hasAnyRole(Lawyer.name())
-                                .requestMatchers(GET, "/api/v1/lawyer").hasAnyAuthority(LAWYER_READ.name())
-                                .requestMatchers(POST, "/api/v1/lawyer").hasAnyAuthority(LAWYER_SUBMIT.name())
-                                .requestMatchers(GET, "/api/v1/lawyer/export").hasAnyAuthority(LAWYER_EXPORT.name())
+                                .requestMatchers(GET, "/api/v1/lawyer").hasAnyAuthority(LAWYER_READ.getPermission())
+                                .requestMatchers(POST, "/api/v1/lawyer").hasAnyAuthority(LAWYER_SUBMIT.getPermission())
+                                .requestMatchers(GET, "/api/v1/lawyer/export").hasAnyAuthority(LAWYER_EXPORT.getPermission())
+                                .requestMatchers("/api/v1/lawyer/**").hasAnyRole(LAWYER.name())
 
                                 // Judge permissions
-                                .requestMatchers("/api/v1/judge/**").hasAnyRole(Judge.name())
-                                .requestMatchers(GET, "/api/v1/judge/history").hasAnyAuthority(JUDGE_HISTORY.name())
-                                .requestMatchers(GET, "/api/v1/judge/reports").hasAnyAuthority(JUDGE_READ.name())
+                                .requestMatchers(GET, "/api/v1/judge/history").hasAnyAuthority(JUDGE_HISTORY.getPermission())
+                                .requestMatchers(GET, "/api/v1/judge/reports").hasAnyAuthority(JUDGE_READ.getPermission())
+                                .requestMatchers("/api/v1/judge/**").hasAnyRole(JUDGE.name())
+
 
                                 .anyRequest()
                                 .authenticated()

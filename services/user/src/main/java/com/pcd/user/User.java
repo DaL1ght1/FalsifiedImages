@@ -3,6 +3,7 @@ package com.pcd.user;
 
 import com.pcd.Token.Token;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import lombok.*;
 import jakarta.persistence.Id;
 import org.springframework.security.core.GrantedAuthority;
@@ -26,12 +27,13 @@ public class User implements UserDetails, Principal {
     private String firstname;
     private String lastname;
     @Column(unique = true)
+    @Email
     private Address address;
     private String email;
     private String password;
 
     @Enumerated(EnumType.STRING)
-    private Roles role;
+    private Role role;
 
     @OneToMany(mappedBy = "user")
     private List<Token> tokens;
@@ -71,16 +73,11 @@ public class User implements UserDetails, Principal {
         return true;
     }
 
-    public String fullName() {
-        return getFirstname() + " " + getLastname();
-    }
 
     @Override
     public String getName() {
         return email;
     }
 
-    public String getFullName() {
-        return firstname + " " + lastname;
-    }
+
 }
