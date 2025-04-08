@@ -29,7 +29,18 @@ services:
       networks:
         - microservices-net
       restart: unless-stopped
-
+  rabbitmq:
+    container_name: ms_rabbitmq
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    networks:
+      - microservices-net
+    restart: unless-stopped
   mongodb:
     container_name: ms_mongo_db
     image: mongo
@@ -59,6 +70,33 @@ services:
     depends_on:
       - mongodb
 
+  zookeeper:
+    image: confluentinc/cp-zookeeper:latest
+    container_name: zookeeper
+    environment:
+      ZOOKEEPER_SERVER_ID: 1
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - 22181:2181
+    networks:
+      - microservices-net
+
+  kafka:
+    image: confluentinc/cp-kafka:latest
+    container_name: ms_kafka
+    ports:
+      - 9092:9092
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
+    networks:
+      - microservices-net
 
   mail-dev:
     container_name: ms_mail_dev
@@ -66,6 +104,51 @@ services:
     ports:
       - 1080:1080
       - 1025:1025
+
+  zipkin:
+    container_name: zipkin
+    image: openzipkin/zipkin
+    ports:
+      - 9411:9411
+    networks:
+      - microservices-net
+
+
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - /run/desktop/mnt/host/d/Work-PCD/falsiified/prometheus.yml:/etc/prometheus/prometheus.yml
+    networks:
+      - microservices-net
+
+
+  user-service:
+      image: user-service-image
+      ports:
+        - "8091:8091"
+      networks:
+        - microservices-net
+  imageanalysis-service:
+      image: image-analysis-image
+      ports:
+        - "8052:8052"
+      networks:
+        - microservices-net
+  imagemanagement-service:
+      image: image-management-image
+      ports:
+        - "8055:8055"
+      networks:
+        - microservices-net
+  report-service:
+      image: report-image
+      ports:
+        - "8054:8054"
+      networks:
+        - microservices-net
 
 networks:
   microservices-net:

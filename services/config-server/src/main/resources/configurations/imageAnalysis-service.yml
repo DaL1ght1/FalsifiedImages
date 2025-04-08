@@ -1,0 +1,62 @@
+spring:
+  data:
+    mongodb:
+      database: Images
+      username: admin
+      password: admin
+      host: localhost
+      port: 27017
+      authentication-database: admin
+
+
+server:
+  port: 8051
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+  tomcat:
+    max-http-form-post-size: 100MB
+    max-swallow-size: -1
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+
+
+services:
+  image-management:
+    url: http://localhost:8050
+
+python:
+  executable: python
+  timeout: 100
+  script:
+    path: classpath:python/detect_falsification.py
+
+model:
+  pytorch:
+    path: classpath:models/falsification_detector.pth
+  version: 1.0.0
+
+analysis:
+  service:
+    user-id: ANALYSIS_SERVICE
+    user-role: SYSTEM
+  model:
+    default:
+        arch: MobileNetV3_Large
+        height: 224
+        width: 224
+        dense: 768
+        dropout: 0.45
+        version: "1.0.0-mobilenetv3l-dense768"
+
+logging:
+  level:
+    com:
+      pcd:
+        imageanalysis: DEBUG
+    org.springframework.web.client.RestTemplate: DEBUG

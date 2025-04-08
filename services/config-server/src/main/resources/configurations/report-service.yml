@@ -1,0 +1,24 @@
+spring:
+  data:
+    mongodb:
+      database: Images
+      username: admin
+      password: admin
+      host: localhost
+      port: 27017
+      authentication-database: admin
+
+
+
+
+
+server:
+  port: 8053
+
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+
